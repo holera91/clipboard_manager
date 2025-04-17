@@ -1,6 +1,3 @@
-Ось гарно оформлений `README.md` для вашого проекту:
-
-```markdown
 # UV Clipboard Manager
 
 ## ⚡ Швидкий старт
