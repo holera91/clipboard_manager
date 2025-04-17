@@ -1,0 +1,11 @@
+[project]
+name = "clipboard-manager"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pyperclip>=1.8.2",
+    "uvloop>=0.17.0",
+    "pynput",
+]
