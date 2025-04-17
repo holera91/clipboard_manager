@@ -7,7 +7,7 @@
 
 1. Встановіть `uv`:
    ```bash
-   pip install uv
+   sudo apt install uv
    ```
 2. Запустіть скрипт:
    ```bash
