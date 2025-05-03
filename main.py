@@ -51,7 +51,12 @@ class ClipboardManager:
     def show_menu(self):
         if not self.history:
             return
-            
+        
+        if self.current_menu:  # Якщо меню вже відкрите, звільняємо grab
+            self.current_menu.destroy()
+            self.current_menu = None
+            self.root.grab_release()  # Звільняємо grab
+
         self.current_menu = Menu(self.root, tearoff=0)
         for idx, item in enumerate(self.history):
             label = f"{idx+1}. {item[:50]}..." if len(item) > 50 else item
@@ -64,7 +69,10 @@ class ClipboardManager:
         self.current_menu.bind("<Unmap>", lambda e: self.on_menu_close())
         
         x, y = self.get_mouse_pos()
-        self.current_menu.tk_popup(x, y)
+        try:
+            self.current_menu.tk_popup(x, y)
+        except Exception as e:
+            print(f"Помилка при відкритті меню: {e}")  # Логування помилки
 
     def on_mouse_click(self, x, y, button, pressed):
         # Якщо меню відкрите і клік поза ним
@@ -78,9 +86,11 @@ class ClipboardManager:
                     menu_y <= y <= menu_y + menu_height):
                 self.current_menu.destroy()
                 self.current_menu = None
+                self.root.grab_release()  # Звільняємо grab з інтерфейсу
 
     def on_menu_close(self):
         self.current_menu = None
+        self.root.grab_release()  # Звільняємо grab при закритті меню
 
     def get_mouse_pos(self):
         controller = mouse.Controller()
@@ -97,12 +107,13 @@ class ClipboardManager:
             with kb.pressed(keyboard.Key.ctrl):
                 kb.press('v')
                 kb.release('v')
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"Помилка при вставці тексту: {e}")  # Логування помилки
         finally:
             if self.current_menu:
                 self.current_menu.destroy()
                 self.current_menu = None
+            self.root.grab_release()  # Звільняємо grab після вставки
 
     def run(self):
         self.root.mainloop()
